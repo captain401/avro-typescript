@@ -7,7 +7,9 @@ import {
 	isMapType,
 	RecordType,
 	EnumType,
-	isOptional
+	isOptional,
+	isLogicalType,
+	LogicalType
 } from "./model";
 export { RecordType } from "./model";
 /** Convert a primitive type from avro to TypeScript */
@@ -29,29 +31,73 @@ function convertPrimitive(avroType: string): string {
 	}
 }
 
+/** A constant array of strings for typeNames, to avoid duplicates. */
+let typeNames: string[] = [];
+
+/** Result interface for avroToTypeScript function. */
+export interface avroToTypeScriptResult {
+	tsInterface: string;
+	typeNames: string[];
+}
+
 /** Converts an Avro record type to a TypeScript file */
-export function avroToTypeScript(recordType: RecordType): string {
+export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]): 
+		avroToTypeScriptResult {
+
+	// Start with the aTypeNames provided by the caller.
+	typeNames = aTypeNames;
 	const output: string[] = [];
 	convertRecord(recordType, output);
-	return output.join("\n");
+
+	let result: avroToTypeScriptResult = {		
+		tsInterface: output.join("\n"),
+		typeNames: typeNames
+	}
+	return result;
 }
 
 /** Convert an Avro Record type. Return the name, but add the definition to the file */
 function convertRecord(recordType: RecordType, fileBuffer: string[]): string {
+	
+	console.log(`convertRecord: export interface ${recordType.name}`);
+	// If this exported top-level type was already created, skip it.
+	// Still return the recordType.name for nested record type field.s
+	if(typeNames.indexOf(recordType.name) > -1) {
+		return recordType.name;
+	}
 	let buffer = `export interface ${recordType.name} {\n`;
 	for (let field of recordType.fields) {
 		buffer += convertFieldDec(field, fileBuffer) + "\n";
 	}
 	buffer += "}\n";
 	fileBuffer.push(buffer);
+	typeNames.push(recordType.name);
 	return recordType.name;
 }
 
 /** Convert an Avro Enum type. Return the name, but add the definition to the file */
 function convertEnum(enumType: EnumType, fileBuffer: string[]): string {
+	// Skip the enum if already created.
+	if(typeNames.indexOf(enumType.name) > -1) {
+		return enumType.name;
+	}
 	const enumDef = `export enum ${enumType.name} { ${enumType.symbols.join(", ")} };\n`;
 	fileBuffer.push(enumDef);
+	typeNames.push(enumType.name);
 	return enumType.name;
+}
+
+/** Convert an Avro Logical type. Return the primitive type. */
+/** TODO: If move to setters then enforce logical type rules (e.g., decimal(10,2)) */
+function convertLogicalType(type: Type, buffer: string[]) {
+	// Force decimal to a number, otherwise bytes will generate a Buffer object.
+	// TODO: This may not work with Java encoding, may require bytes.
+	let logicalType: LogicalType = <LogicalType>type;
+	// console.log(`convertLogicalType: ${logicalType.logicalType} ${logicalType.type}`);
+	if(logicalType.logicalType === "decimal") {
+		logicalType.type = "float";
+	}
+	return convertPrimitive(logicalType.type);
 }
 
 function convertType(type: Type, buffer: string[]): string {
@@ -74,6 +120,8 @@ function convertType(type: Type, buffer: string[]): string {
 	} else if (isEnumType(type)) {
 		// array, call recursively for the array element type
 		return convertEnum(type, buffer);
+	} else if (isLogicalType(type)) {
+		return convertLogicalType(type, buffer);
 	} else {
 		console.error("Cannot work out type", type);
 		return "UNKNOWN";
