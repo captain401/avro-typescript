@@ -1,7 +1,11 @@
-import * as fs from "fs";
-import { avroToTypeScript, RecordType } from "../lib/"
+import * as fs from "file-system";
+import { avroToTypeScript, RecordType, avroToTypeScriptResult } from "../lib/"
 
-const schemaText = fs.readFileSync(__dirname + "/example.avsc", "UTF8");
+const schemaText = fs.readFileSync("./example.avsc", "UTF8");
 const schema = JSON.parse(schemaText);
-console.log(avroToTypeScript(schema as RecordType));
+let typeNames: string[] = [];
+console.log(`test: ${typeNames}`);
+let avroToTypeScriptResult: avroToTypeScriptResult = 
+    avroToTypeScript(schema as RecordType, typeNames);
+console.log(avroToTypeScriptResult.tsInterface);
 

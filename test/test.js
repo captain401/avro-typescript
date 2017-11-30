@@ -1,7 +1,10 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fs = require("fs");
+exports.__esModule = true;
+var fs = require("file-system");
 var _1 = require("../lib/");
-var schemaText = fs.readFileSync(__dirname + "/example.avsc", "UTF8");
+var schemaText = fs.readFileSync("./example.avsc", "UTF8");
 var schema = JSON.parse(schemaText);
-console.log(_1.avroToTypeScript(schema));
+var typeNames = [];
+console.log("test: " + typeNames);
+var avroToTypeScriptResult = _1.avroToTypeScript(schema, typeNames);
+console.log(avroToTypeScriptResult.tsInterface);

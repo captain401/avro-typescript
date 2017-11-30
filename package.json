@@ -4,6 +4,7 @@
   "description": "TypeSript code generator for Apache Avro types",
   "main": "./lib/index.js",
   "directories": {
+    "lib": "lib",
     "test": "test"
   },
   "scripts": {
@@ -13,7 +14,6 @@
     "type": "git",
     "url": "git+https://github.com/joewood/avro-typescript.git"
   },
-  "readme": "READMD.md",
   "types": "./lib/index.d.ts",
   "keywords": [
     "avro",
@@ -27,5 +27,8 @@
   "homepage": "https://github.com/joewood/avro-typescript#readme",
   "devDependencies": {
     "@types/node": "^7.0.22"
+  },
+  "dependencies": {
+    "file-system": "^2.2.2"
   }
 }
