@@ -60,7 +60,6 @@ export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]):
 function convertRecord(recordType: RecordType, fileBuffer: string[]): string {
 	
 	//console.log(`convertRecord: export interface ${recordType.name}`);
-	console.log(`convertRecord: ${typeNames}`)
 	// If this exported top-level type was already created, skip it.
 	// Still return the recordType.name for nested record type field.s
 	if(typeNames.indexOf(recordType.name) > -1) {

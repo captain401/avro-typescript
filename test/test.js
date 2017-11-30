@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("file-system");
 var _1 = require("../lib/");
 var schemaText = fs.readFileSync("./example.avsc", "UTF8");
