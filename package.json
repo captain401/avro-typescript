@@ -1,6 +1,6 @@
 {
   "name": "avro-typescript",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "TypeSript code generator for Apache Avro types",
   "main": "./lib/index.js",
   "directories": {
@@ -10,17 +10,14 @@
   "scripts": {
     "test": "tsc -p . && tsc -p test/ && node test/test.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/joewood/avro-typescript.git"
-  },
+  "repository": "https://github.com/rethoughtinsurance/avro-typescript.git",
   "types": "./lib/index.d.ts",
   "keywords": [
     "avro",
     "typescript"
   ],
-  "author": "Joe Wood",
-  "license": "MIT",
+  "author": "Joe Wood, Cory Isaacson",
+  "license": "Commercial",
   "bugs": {
     "url": "https://github.com/joewood/avro-typescript/issues"
   },
@@ -30,5 +27,6 @@
   },
   "dependencies": {
     "file-system": "^2.2.2"
-  }
+  },
+  "private": true
 }
