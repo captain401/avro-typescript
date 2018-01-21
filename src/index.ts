@@ -102,10 +102,8 @@ function convertEnum(enumType: EnumType, fileBuffer: string[]): string {
 }
 
 /** Convert an Avro Logical type. Return the primitive type. */
-/** TODO: If move to setters then enforce logical type rules (e.g., decimal(10,2)) */
 function convertLogicalType(type: Type, buffer: string[]) {
 	// Force decimal to a number, otherwise bytes will generate a Buffer object.
-	// TODO: This may not work with Java encoding, may require bytes.
 	let logicalType: LogicalType = <LogicalType>type;
 	// console.log(`convertLogicalType: ${logicalType.logicalType} ${logicalType.type}`);
 	if(logicalType.logicalType === "decimal") {
