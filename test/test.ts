@@ -1,7 +1,7 @@
 import * as fs from "file-system";
 import { avroToTypeScript, RecordType, avroToTypeScriptResult } from "../lib/"
 
-const schemaText = fs.readFileSync("./example.avsc", "UTF8");
+const schemaText = fs.readFileSync("./test/example.avsc", "UTF8");
 const schema = JSON.parse(schemaText);
 let typeNames: string[] = [];
 console.log(`test: ${typeNames}`);

@@ -41,7 +41,7 @@ export interface avroToTypeScriptResult {
 }
 
 /** Converts an Avro record type to a TypeScript file */
-export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]): 
+export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]):
 		avroToTypeScriptResult {
 
 	// Start with the aTypeNames provided by the caller.
@@ -49,7 +49,7 @@ export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]):
 	const output: string[] = [];
 	convertRecord(recordType, output);
 
-	let result: avroToTypeScriptResult = {		
+	let result: avroToTypeScriptResult = {
 		tsInterface: output.join("\n"),
 		typeNames: typeNames
 	}
@@ -58,7 +58,7 @@ export function avroToTypeScript(recordType: RecordType, aTypeNames: string[]):
 
 /** Convert an Avro Record type. Return the name, but add the definition to the file */
 function convertRecord(recordType: RecordType, fileBuffer: string[]): string {
-	
+
 	//console.log(`convertRecord: export interface ${recordType.name}`);
 	// If this exported top-level type was already created, skip it.
 	// Still return the recordType.name for nested record type field.s
@@ -81,7 +81,21 @@ function convertEnum(enumType: EnumType, fileBuffer: string[]): string {
 	if(typeNames.indexOf(enumType.name) > -1) {
 		return enumType.name;
 	}
-	const enumDef = `export enum ${enumType.name} { ${enumType.symbols.join(", ")} };\n`;
+	let enumDef = `export enum ${enumType.name} {\n`;
+  let ctr: number = 0;
+  let suffix: string;
+  for(let enumSymbol of enumType.symbols) {
+    enumDef += `  ${enumSymbol} = '${enumSymbol}'`
+    ctr++;
+    if(ctr === enumType.symbols.length) {
+      suffix = `\n`;
+    } else {
+      suffix = `,\n`;
+    }
+    enumDef += `${suffix}`
+  }
+  enumDef += `};\n`;
+
 	fileBuffer.push(enumDef);
 	typeNames.push(enumType.name);
 	return enumType.name;
