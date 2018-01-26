@@ -2,7 +2,7 @@
 
 A simple JS library to convert Avro Schemas to TypeScript interfaces.
 
-This is a fork modified and maintained by reThought Insurance Corporation.
+This is a Captain401 fork from the fork by reThought Insurance Corporation.
 
 Modifictions include:
 
@@ -20,16 +20,20 @@ The library can be run in node.js or the browser. It takes a Avro Schema as a Ja
 ## Usage
 
 ```typescript
-import { avroToTypeScript, RecordType, avroToTypeScriptResult } from "avro-typescript"
+import { avroToTypeScript, RecordType, AvroToTypeScriptOptions } from "avro-typescript";
 
 const schemaText = fs.readFileSync("example.avsc", "UTF8");
 const schema = JSON.parse(schemaText) as RecordType;
-// Pass an empty array of typenames into avroToTypeScript function, it is returned in the avroToTypeScriptResult.
-let typeNames: string[] = [];
-let avroToTypeScriptResult: avroToTypeScriptResult = avroToTypeScript(avscSchema as RecordType,
-      typeNames);
-console.log(avroToTypeScriptResult.tsInterface);
-// If multiple types are created, pass the avroToTypeScriptResult.typeNames in for each call to de-duplicate common types.
+
+const options: AvroToTypeScriptOptions = {
+  // Declare "logicalType": "uuid" to have "string" type
+  logicalTypes: {
+    "uuid": "string"
+  }
+}
+
+let avroToTypeScriptResult: string = avroToTypeScript(avscSchema as RecordType, options);
+console.log(avroToTypeScriptResult);
 ```
 
 ## Features
