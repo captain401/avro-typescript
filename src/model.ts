@@ -64,7 +64,6 @@ export function isEnumType(type: BaseType): type is EnumType {
 }
 
 export function isLogicalType(type: BaseType): type is LogicalType {
-  // console.log(`isLogicalType logicalType: ${(<LogicalType>type).logicalType} type: ${(<LogicalType>type).type}`);
   return (<LogicalType>type).logicalType.length > 0;
 }
 
