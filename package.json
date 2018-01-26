@@ -26,7 +26,8 @@
     "@types/node": "^7.0.22"
   },
   "dependencies": {
-    "file-system": "^2.2.2"
+    "file-system": "^2.2.2",
+    "typescript": "^2.6.2"
   },
   "private": true
 }
