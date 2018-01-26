@@ -13,17 +13,17 @@ import {
 } from "./model";
 export { RecordType } from "./model";
 
-export interface Options {
-  // Convert logical types to user-defined values.
+export interface AvroToTypeScriptOptions {
+  // Convert logical types to user-defined type names.
   logicalTypes?: {[key: string]: string};
 }
 
 class Converter {
   /** A constant array of strings for typeNames, to avoid duplicates. */
   typeNames: string[];
-  options: Options;
+  options: AvroToTypeScriptOptions;
 
-  constructor(options: Options = {}) {
+  constructor(options: AvroToTypeScriptOptions = {}) {
     this.typeNames = [];
     this.options = options;
   }
@@ -90,11 +90,19 @@ class Converter {
     return enumType.name;
   }
 
-  /** Convert an Avro Logical type. Return the primitive type. */
+  /** Convert an Avro Logical type. Return a custom (from options) or primitive type. */
   convertLogicalType(type: Type, buffer: string[]) {
-    // Force decimal to a number, otherwise bytes will generate a Buffer object.
     let logicalType: LogicalType = <LogicalType>type;
-    // console.log(`convertLogicalType: ${logicalType.logicalType} ${logicalType.type}`);
+    // Use `this.options` to handle custom logical types.
+    if (this.options.logicalTypes) {
+      const customType = this.options.logicalTypes[logicalType.logicalType];
+      if (customType) {
+	return customType;
+      }
+    }
+
+    // Force decimal to a number, otherwise bytes will generate a Buffer object.
+    // TODO: Does this even make sense?
     if(logicalType.logicalType === "decimal") {
       logicalType.type = "float";
     }
@@ -137,7 +145,7 @@ class Converter {
 }
 
 /** Converts an Avro record type to a TypeScript file */
-export function avroToTypeScript(recordType: RecordType, options?: Options): string {
+export function avroToTypeScript(recordType: RecordType, options?: AvroToTypeScriptOptions): string {
   const converter = new Converter(options);
   const output: string[] = [];
   converter.convertRecord(recordType, output);

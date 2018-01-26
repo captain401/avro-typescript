@@ -1,9 +1,9 @@
 import { RecordType } from "./model";
 export { RecordType } from "./model";
-export interface Options {
+export interface AvroToTypeScriptOptions {
     logicalTypes?: {
         [key: string]: string;
     };
 }
 /** Converts an Avro record type to a TypeScript file */
-export declare function avroToTypeScript(recordType: RecordType, options?: Options): string;
+export declare function avroToTypeScript(recordType: RecordType, options?: AvroToTypeScriptOptions): string;
