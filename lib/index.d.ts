@@ -1,8 +1,12 @@
 import { RecordType } from "./model";
 export { RecordType } from "./model";
+export interface LogicalTypeParams {
+    customType: string;
+    importStatement?: string;
+}
 export interface AvroToTypeScriptOptions {
     logicalTypes?: {
-        [key: string]: string;
+        [logicalType: string]: LogicalTypeParams;
     };
 }
 /** Converts an Avro record type to a TypeScript file */

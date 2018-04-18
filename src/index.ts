@@ -13,18 +13,27 @@ import {
 } from "./model";
 export { RecordType } from "./model";
 
+export interface LogicalTypeParams {
+  // The Typescript type this should be mapped to.
+  customType: string;
+  // Required imports for the customType.
+  importStatement?: string;
+}
+
 export interface AvroToTypeScriptOptions {
   // Convert logical types to user-defined type names.
-  logicalTypes?: {[key: string]: string};
+  logicalTypes?: {[logicalType: string]: LogicalTypeParams};
 }
 
 class Converter {
   /** A constant array of strings for typeNames, to avoid duplicates. */
   typeNames: string[];
   options: AvroToTypeScriptOptions;
+  importStatements: Set<string>;
 
   constructor(options: AvroToTypeScriptOptions = {}) {
     this.typeNames = [];
+    this.importStatements = new Set<string>();
     this.options = options;
   }
 
@@ -95,7 +104,10 @@ class Converter {
     let logicalType: LogicalType = <LogicalType>type;
     // Use `this.options` to handle custom logical types.
     if (this.options.logicalTypes) {
-      const customType = this.options.logicalTypes[logicalType.logicalType];
+      const {customType, importStatement} = this.options.logicalTypes[logicalType.logicalType];
+      if (importStatement) {
+        this.importStatements.add(importStatement);
+      }
       if (customType) {
 	return customType;
       }
@@ -141,7 +153,10 @@ class Converter {
 /** Converts an Avro record type to a TypeScript file */
 export function avroToTypeScript(recordType: RecordType, options?: AvroToTypeScriptOptions): string {
   const converter = new Converter(options);
-  const output: string[] = [];
+  let output: string[] = [];
   converter.convertRecord(recordType, output);
+  if (converter.importStatements.size > 0) {
+    output = [...Array.from(converter.importStatements), '', ...output];
+  }
   return output.join("\n");
 }
