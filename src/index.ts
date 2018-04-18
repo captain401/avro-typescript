@@ -100,12 +100,6 @@ class Converter {
 	return customType;
       }
     }
-
-    // Force decimal to a number, otherwise bytes will generate a Buffer object.
-    // TODO: Does this even make sense?
-    if(logicalType.logicalType === "decimal") {
-      logicalType.type = "float";
-    }
     return this.convertPrimitive(logicalType.type);
   }
 
