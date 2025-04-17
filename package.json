@@ -3,25 +3,36 @@
   "version": "0.0.7",
   "description": "TypeScript code generator for Apache Avro types",
   "main": "./lib/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "directories": {
     "lib": "lib",
     "test": "test"
   },
   "scripts": {
-    "test": "tsc -p . && tsc -p test/ && node test/test.js"
+    "test": "tsc -p . && tsc -p test/ && node test/test.js",
+    "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+
   },
-  "repository": "https://github.com/rethoughtinsurance/avro-typescript.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/captain401/hi-avro-typescript.git"
+  },
   "types": "./lib/index.d.ts",
   "keywords": [
     "avro",
     "typescript"
   ],
-  "author": "Joe Wood, Cory Isaacson",
-  "license": "Commercial",
+  "author": "humaninterest",
+  "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/joewood/avro-typescript/issues"
+    "url": "https://github.com/captain401/hi-avro-typescript/issues"
   },
-  "homepage": "https://github.com/joewood/avro-typescript#readme",
+  "homepage": "https://github.com/captain401/hi-avro-typescript#readme",
   "devDependencies": {
     "@types/node": "^22.14.1",
     "typescript": "^5.8.3"
