@@ -16,7 +16,6 @@
     "test": "tsc -p . && tsc -p test/ && node test/test.js",
     "build": "tsc -p tsconfig.json",
     "prepublishOnly": "npm run build"
-
   },
   "repository": {
     "type": "git",
